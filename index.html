@@ -3,7 +3,21 @@
 		<title> Hello </title>
 	</head>
 	<body>
-		<canvas id="canvas" style="border:1px solid black"></canvas>
+		<table width="100%" height="100%">
+			<tr>
+				<td align="center" valign="middle">
+					<canvas id="canvas" style="border:1px solid black"></canvas>
+					<br><br><br><br>
+					<table id="table" style="font-size:40;">
+						<tr>
+							<td id="left" align="left" width="33%"> Paddle: QW </td>
+							<td align="center" width="33%"> <input id="switch" type="button" value="Switch" style="font-size:30;" /> </td>
+							<td id="right" align="right" width="33%"> Ball: OP </td>
+						</tr>
+					</table>
+				</td>
+			</tr>
+		</table>
 		<script type="text/javascript" src="script.js"></script>
 	</body>
 </html>

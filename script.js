@@ -4,50 +4,77 @@
 	
 	canvas.width = 1000;
 	canvas.height = 600;
+	document.getElementById("table").width = canvas.width;
 	
-	var paddle = {
-		width: 200,
-		height: 10,
+	var paddle;
+	var ball;
+	var score;
+	var playing = false;
+	
+	var leftKeys = {
 		left: "Q".charCodeAt(0),
-		right: "W".charCodeAt(0),
-		speed: 10
-	}
-	paddle.x = (canvas.width - paddle.width) / 2;
-	paddle.y = canvas.height - paddle.height;
-	
-	var ball = {
-		radius: 40,
-		left: "O".charCodeAt(0),
-		right: "P".charCodeAt(0),
-		dx: 0,
-		dy: 10,
-		accel: 0.1,
-		bounce: 0.9,
-		maxSpeed: 10
+		right: "W".charCodeAt(0)
 	};
-	ball.x = canvas.width / 2;
-	ball.y = ball.radius * 2;
 	
-	var score = 0;
+	var rightKeys = {
+		left: "O".charCodeAt(0),
+		right: "P".charCodeAt(0)
+	};
+	
+	var keysSwitched = false;
+	
+	function init() {
+		paddle = {
+			width: 200,
+			height: 10,
+			speed: 10
+		}
+		paddle.x = (canvas.width - paddle.width) / 2;
+		paddle.y = canvas.height - paddle.height;
+		
+		ball = {
+			radius: 40,
+			dx: 0,
+			dy: -10,
+			accel: 0.2,
+			bounce: 0.9,
+			maxSpeed: 8
+		};
+		ball.x = canvas.width / 2;
+		ball.y = canvas.height - paddle.height - ball.radius * 2;
+		
+		score = 0;
+		
+		playing = true;
+	}
 	
 	var keys = {};
 	window.onkeydown = function(event) {
 		var key = (event || window.event).keyCode;
 		keys[key] = true;
+		if(!playing && key == 32) init();
 	};
 	window.onkeyup = function(event) {
 		var key = (event || window.event).keyCode;
 		keys[key] = false;
 	};
 	
+	document.getElementById("switch").onclick = function() {
+		if(!playing) {
+			keysSwitched = !keysSwitched;
+			document.getElementById("left").innerHTML = (keysSwitched ? "Ball" : "Paddle") + ": QW";
+			document.getElementById("right").innerHTML = (keysSwitched ? "Paddle" : "Ball") + ": OP";
+		}
+	};
+	
 	function physics() {
-		if(keys[paddle.left]) paddle.x -= paddle.speed;
-		if(keys[paddle.right]) paddle.x += paddle.speed;
+		if(keys[(keysSwitched ? rightKeys : leftKeys).left]) paddle.x -= paddle.speed;
+		if(keys[(keysSwitched ? rightKeys : leftKeys).right]) paddle.x += paddle.speed;
 		if(paddle.x < 0) paddle.x = 0;
 		if(paddle.x > canvas.width - paddle.width) paddle.x = canvas.width - paddle.width;
 		
-		if(keys[ball.left]) ball.dx -= ball.accel;
-		if(keys[ball.right]) ball.dx += ball.accel;
+		if(keys[(keysSwitched ? leftKeys : rightKeys).left]) ball.dx -= ball.accel;
+		if(keys[(keysSwitched ? leftKeys : rightKeys).right]) ball.dx += ball.accel;
 		if(ball.dx > ball.maxSpeed) ball.dx = ball.maxSpeed;
 		if(ball.dx < -ball.maxSpeed) ball.dx = -ball.maxSpeed;
 		ball.x += ball.dx;
@@ -72,7 +99,7 @@
 				score++;
 			}
 			else {
-				clearInterval(interval);
+				playing = false;
 			}
 		}
 	}
@@ -89,8 +116,12 @@
 		ctx.fillText(score.toString(), 10, 30);
 	}
 	
-	var interval = setInterval(function() {
-		physics();
+	init();
+	
+	playing = false;
+	
+	setInterval(function() {
+		if(playing) physics();
 		draw();
 	}, 10);
 })();
