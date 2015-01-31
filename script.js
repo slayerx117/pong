@@ -33,7 +33,7 @@
 		paddle.y = canvas.height - paddle.height;
 		
 		ball = {
-			radius: 40,
+			radius: 30,
 			dx: 0,
 			dy: -10,
 			accel: 0.2,
