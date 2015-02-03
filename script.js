@@ -11,18 +11,6 @@
 	var score;
 	var playing = false;
 	
-	var leftKeys = {
-		left: "Q".charCodeAt(0),
-		right: "W".charCodeAt(0)
-	};
-	
-	var rightKeys = {
-		left: "O".charCodeAt(0),
-		right: "P".charCodeAt(0)
-	};
-	
-	var keysSwitched = false;
-	
 	function init() {
 		paddle = {
 			width: 200,
@@ -37,7 +25,8 @@
 			dx: 0,
 			dy: -10,
 			accel: 0.2,
-			bounce: 0.9,
+			xBounce: 0.9,
+			yBounce: 1.001,
 			maxSpeed: 8
 		};
 		ball.x = canvas.width / 2;
@@ -48,7 +37,17 @@
 		playing = true;
 	}
 	
-	var keys = {};
+	var keys = {
+		left: {
+			left: "Q".charCodeAt(0),
+			right: "W".charCodeAt(0)
+		},
+		right: {
+			left: "O".charCodeAt(0),
+			right: "P".charCodeAt(0)
+		},
+		switched: false
+	};
 	window.onkeydown = function(event) {
 		var key = (event || window.event).keyCode;
 		keys[key] = true;
@@ -61,41 +60,41 @@
 	
 	document.getElementById("switch").onclick = function() {
 		if(!playing) {
-			keysSwitched = !keysSwitched;
-			document.getElementById("left").innerHTML = (keysSwitched ? "Ball" : "Paddle") + ": QW";
-			document.getElementById("right").innerHTML = (keysSwitched ? "Paddle" : "Ball") + ": OP";
+			keys.switched = !keys.switched;
+			document.getElementById("left").innerHTML = (keys.switched ? "Ball" : "Paddle") + ": QW";
+			document.getElementById("right").innerHTML = (keys.switched ? "Paddle" : "Ball") + ": OP";
 		}
 	};
 	
 	function physics() {
-		if(keys[(keysSwitched ? rightKeys : leftKeys).left]) paddle.x -= paddle.speed;
-		if(keys[(keysSwitched ? rightKeys : leftKeys).right]) paddle.x += paddle.speed;
+		if(keys[(keys.switched ? keys.right : keys.left).left]) paddle.x -= paddle.speed;
+		if(keys[(keys.switched ? keys.right : keys.left).right]) paddle.x += paddle.speed;
 		if(paddle.x < 0) paddle.x = 0;
 		if(paddle.x > canvas.width - paddle.width) paddle.x = canvas.width - paddle.width;
 		
-		if(keys[(keysSwitched ? leftKeys : rightKeys).left]) ball.dx -= ball.accel;
-		if(keys[(keysSwitched ? leftKeys : rightKeys).right]) ball.dx += ball.accel;
+		if(keys[(keys.switched ? keys.left : keys.right).left]) ball.dx -= ball.accel;
+		if(keys[(keys.switched ? keys.left : keys.right).right]) ball.dx += ball.accel;
 		if(ball.dx > ball.maxSpeed) ball.dx = ball.maxSpeed;
 		if(ball.dx < -ball.maxSpeed) ball.dx = -ball.maxSpeed;
 		ball.x += ball.dx;
 		if(ball.x < ball.radius) {
 			ball.x = ball.radius;
-			ball.dx *= -ball.bounce;
+			ball.dx *= -ball.xBounce;
 		}
 		if(ball.x > canvas.width - ball.radius) {
 			ball.x = canvas.width - ball.radius;
-			ball.dx *= -ball.bounce;
+			ball.dx *= -ball.xBounce;
 		}
 		
 		ball.y += ball.dy;
 		if(ball.y < ball.radius) {
 			ball.y = ball.radius;
-			ball.dy *= -1;
+			ball.dy *= -ball.yBounce;
 		}
 		if(ball.y > canvas.height - ball.radius - paddle.height) {
 			if(ball.x >= paddle.x && ball.x <= paddle.x + paddle.width) {
 				ball.y = canvas.height - ball.radius - paddle.height;
-				ball.dy *= -1;
+				ball.dy *= -ball.yBounce;
 				score++;
 			}
 			else {
@@ -106,9 +105,9 @@
 	
 	function draw() {
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-		ctx.fillStyle = "orange";
 		ctx.beginPath();
 		ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
+		ctx.fillStyle = "orange";
 		ctx.fill();
 		ctx.fillStyle = "black";
 		ctx.fillRect(paddle.x, paddle.y, paddle.width, paddle.height);
