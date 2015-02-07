@@ -1,36 +1,76 @@
 <html>
 	<head>
-		<title> Hello </title>
-		<link rel="icon" href="favicon.ico" />
-		<style type="text/css">
-			body {
-				-webkit-touch-callout: none;
-				-webkit-user-select: none;
-				-khtml-user-select: none;
-				-moz-user-select: none;
-				-ms-user-select: none;
-				user-select: none;
-			}
-		</style>
+		<title> MorPong </title>
+		<link rel="icon" href="C:\Users\bdavis2\Downloads\pong-master\pong-master\icon.ico">
+		<script src="jquery-1.11.2.min.js"></script>
+		<link href='http://fonts.googleapis.com/css?family=Exo+2' rel='stylesheet' type='text/css'>
+		<style>
+	.hidden{
+		display: none;
+	}
+	.hidden2{
+		opacity: 0;
+		}
+	body{
+		font-family: "Exo 2", Arial ,Sans-Serif;
+		background-color: orange;
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+		color: black;
+	}
+	#highscore_text{
+		margin-bottom: 2px;
+		margin-top: 5px;
+	}
+	#highscore{
+		margin-bottom: 5px;
+		margin-top: 5px;
+	}
+	#compMode{
+		 margin-top: 5px;
+	}
+</style>
 	</head>
 	<body>
-		<table width="100%" height="100%">
-			<tr>
-				<td align="center" valign="middle" style="font-size:40;">
-					Press space to play
-					<br><br>
-					<canvas id="canvas" style="border:2px solid black"></canvas>
-					<br><br>
-					<table id="table" style="font-size:40;">
-						<tr>
-							<td id="left" align="left" width="33%"> Paddle: QW </td>
-							<td align="center" width="33%"> <input id="switch" type="button" value="Switch" style="font-size:30;" /> </td>
-							<td id="right" align="right" width="33%"> Ball: OP </td>
-						</tr>
-					</table>
-				</td>
-			</tr>
+			<span id="main" class="hidden">
+				<table width="100%" height="100%">
+					<tr>
+						<td align="center" valign="middle" style="font-size:35;">
+							<div id="restart" class="hidden2">Space to restart</div>
+							<br>
+							<canvas id="canvas"></canvas>
+							<br><br>
+							<table id="table" style="font-size:40;">
+								<tr>
+									<td id="left" align="left" width="33%"> Paddle: QW </td>
+									<td align="center" width="33%"> <input id="switch" type="button" class="button" value="Switch" style="font-size:30;" /> </td>
+									<td id="right" align="right" width="33%"> Ball: OP </td><br>									
+								</tr>
+								<tr align="middle" valign="middle" width="10%">
+									<td colspan="3">
+										<h4 id="highscore_text">High Score:</h4>
+										<h5 id="highscore">0</h5>
+									</td>
+								</tr>
+								<tr align="middle" id="moreOptions" valign="middle" width="10%">
+									<td colspan="3">
+										<input id="highscoreReset" type="button" class="button" value="Reset High Score" style="font-size:20;"><br>
+										<input type="button" class="button" id="compMode" style="font-size:20;" value="Enable Competitve Mode"><div style="font-size:20;">(hasn't been implemented yet)</div>
+									</td>
+								</tr>
+						</table>
+					</td>
+				</tr>
 		</table>
+		</span>
+			<div id="index">
+				<br><br><br><br><br><br><br><br>
+				<p align="center" valign="middle" style="font-size:40;">OurPong is MorPong than YourPong<br><br><br> Space to begin</p>
+		</div>
 		<script type="text/javascript" src="script.js"></script>
 	</body>
 </html>
